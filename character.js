@@ -2,7 +2,7 @@
 
 
 class Character{
-    constructor(AD, HP, gold){     
+    constructor(type, AD, HP, gold){     
         this.gold = 0;
     }
     // get HP() {
@@ -14,8 +14,9 @@ class Character{
 }
 
 class Mage extends Character{
-    constructor(AD, HP, gold) {
-        super(AD, HP, gold);
+    constructor(type, AD, HP, gold) {
+        super(type, AD, HP, gold);
+        this.type = "Mage";
         this.AD = 40;
         this.HP = 100;
     }
@@ -26,8 +27,9 @@ class Mage extends Character{
 }
 
 class Warrior extends Character{
-    constructor(AD, HP, gold) {
-        super(AD, HP, gold);
+    constructor(type, AD, HP, gold) {
+        super(type, AD, HP, gold);
+        this.type = "Warrior";
         this.AD = 20;
         this.HP = 200;
         // this.gold = gold;
@@ -39,8 +41,9 @@ class Warrior extends Character{
 
 
 class Thief extends Character{
-    constructor(AD, HP, gold) {
-        super(AD, HP, gold);
+    constructor(type, AD, HP, gold) {
+        super(type, AD, HP, gold);
+        this.type = "Thief";
         this.AD = 30;
         this.HP = 150;
     }

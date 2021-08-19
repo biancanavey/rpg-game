@@ -3,59 +3,115 @@
 'use strict';
 const prompt = require('prompt-sync')();
 const { Mage, Thief, Warrior } = require("./character");
+let character = ""
+let activity = ""
 
 console.log("Welcome to Dungeon Fortress.\n")
-//***CHECK IF PLAYER ALREADY HAS AN EXISTING GAME SAVED***
-//if (log.json == true){
-    //[Continue last game] [Start a new game] [Exit]
-// }
-// else{
-//    [Start a new game][Exit]
-// }
 
+//***CHECK IF PLAYER ALREADY HAS AN EXISTING GAME SAVED***
+function checkGameStatus(){
+    //if (log.json == true){
+        //options: [Continue last game] [Start a new game] [Exit]
+    // }
+    // else{
+    //    options: [Start a new game][Exit]
+    // }
+}
 
 function startNewGame(){
     const name = prompt('Enter your character name? ');
     function displayName(){
         console.log(`Welcome ${name}...`);
     }
-    setTimeout(displayName, 400);
+    // setTimeout(displayName, 400);
 
     function readStory(){
         console.log("You are currently in ... and your mission is to ...");
     }
-    setTimeout(readStory, 1200);
+    // setTimeout(readStory, 1200);
 }
-
-startNewGame();
-
-
 
 function selectCharacterClass(){
     const characterClass = prompt('Select your character class [Mage] [Warrior] [Thief]: '); //or write q for more information on the classes
-    //check if characterClass matches any of the characters in the character.js character array
-    // if (characterClassArray.includes(characterClass)){
-    //     return true;
-    // }
-    // else{
-    //     console.log("this class doesn't exist.")
-    // }
-    const magekras = new Thief();
-    console.log(magekras);
-    console.log("The output of this is: " + magekras.AD);
+    
+    //cheap solution but hey, works for now :D -- should ideally search through the classes in character.js
+    if(characterClass.toLowerCase() === "mage"){
+        character = new Mage();
 
-    console.log("Great choice! The " + characterClass + " is famous for it's strength in the kingdom!");
-    console.log("Your starting attributes are (AD, HP, gold)");
-    console.log("In order to acquire gold, you need to kill creatures that come your way.");
+    }
+    else if(characterClass.toLowerCase() === "warrior"){
+        character = new Warrior();
+
+    }
+    else if(characterClass.toLowerCase() === "thief"){
+        character = new Thief();
+    }
+    else{
+        console.log("Invalid class: " + characterClass + " doesn't exist or is spellt incorrectly.")
+        selectCharacterClass();
+    }
+
+    console.log("Great choice! The " + character.type + " is famous for it's strength in the kingdom!");
+    console.log("Your starting attributes are: \n[AD: " + character.AD + "], \n[HP: " + character.HP + "], \n[Gold: "+ character.gold + "]");
 }
 
 
-setTimeout(selectCharacterClass, 2300);
+
+console.log("In order to acquire gold, you need to kill creatures that you encounter along your way...");
+
+console.log("...Use your gold to replenish your health and avoid dying as creatures get stronger.");
+
+console.log("Let's begin your journey. You will learn the rest along the way.");
 
 
-console.log("You have faced your first creature...");
-// console.log("It's a "+ enemy[]) 
+function chooseActivity(){
+    console.log("What would you like to do next?")
+    console.log("w - continue walking");
+    console.log("i - view inventory");
+    console.log("s - check status (AD, HP, XP, level)");
+    console.log("r - consume a potion to recover HP")
+    console.log("q - quit the game")
+    activity = prompt();
 
+    if (activity === "w"){
+        console.log("You've encountered an enemy"); //could also encounter (2) nothing or (3) encounter a merchant/helper
+        generateEnemy();
+        chooseFightAction();
+    }
+    else if(activity === "i"){
+        viewInventory();
+    }
+    else if(activity === "s"){
+        checkCharacterStatus();
+    }
+    else if(activity === "r"){
+        recoverHP();
+    }
+    else if(activity === "q"){
+        quitGame();
+    }
+    else{
+        console.log("The command " + activity + " is incorrect. Please use only letters without spaces or special characters");
+        chooseActivity();
+    }
+}
+
+
+function chooseFightAction(){
+    console.log("What would you like to do next?")
+    console.log("a - attack");
+    console.log("f - flee battle");
+    action  = prompt();
+    if(action === "a"){
+        attack();
+    }
+    else if(action==="f"){
+        flee();
+    }
+    else{
+        "incorrect command";
+    }
+}
 
 // let character = new Character()
 // console.log("THis is priting :" + character);
@@ -97,3 +153,20 @@ console.log("You have faced your first creature...");
 //     max = Math.floor(max);
 //     return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
 //  }
+
+function quitGame(){
+    choice = prompt("Are you sure you want to quit the game (your progress will be saved)? (Y/N): ")
+    if(choice==="Y"){
+        //save progress in JSON file
+        process.exit();
+    }
+    else{
+        continue; //might have to make it "chooseActivity()"
+    }
+}
+
+
+startNewGame();
+selectCharacterClass();
+// setTimeout(selectCharacterClass, 2300);
+chooseActivity();
