@@ -1,0 +1,1 @@
+locations = ["Evil Queen's Palace", "Granny's Diner", "Pleasure Island", "King Xavier's Castle"]
