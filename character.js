@@ -1,10 +1,10 @@
 'use strict';
-const { Inventory } = require("./inventory");
-
-export class Character{
+// import { Inventory } from "./inventory"; //please also don't use "import" <- again, ask kras if help needed :D
+//sorry :( 
+class Character{ //please don't use "export" :D <- Ask kras if you don't know what to do (how to import it)
     constructor(name, type, AD, currentHP, totalHP, XP=0, gold=0){     
-        this.gold = this.gold;
-        this.XP = this.XP;
+        this.gold = 0;
+        this.XP = XP;
         this.name = name;
         if (this.name === '') {
           this.name = 'Character';
@@ -19,6 +19,8 @@ class Mage extends Character{
         this.AD = 40;
         this.currentHP = 100;
         this.totalHP = 100;
+        this.XP = 0;
+        this.gold = 0;
     }
 }
 
@@ -123,12 +125,10 @@ function calculateAD(attack, characterLevel){
     // 83.2
     // 94
     // 106
-    }
-
-
-
+}
 
 module.exports = {
+    Character,
     Mage,
     Warrior,
     Thief,
@@ -136,4 +136,3 @@ module.exports = {
     calculateLevel, 
     calculateAD
 };
-
