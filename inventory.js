@@ -1,4 +1,5 @@
-export default class Inventory {
+'use strict';
+class Inventory {
 
     constructor(items = []) {
       this.items = items;
@@ -19,3 +20,5 @@ export default class Inventory {
         return this.items;
       }
     }
+
+module.exports = { Inventory };

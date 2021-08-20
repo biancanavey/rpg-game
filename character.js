@@ -1,37 +1,34 @@
 'use strict';
+const { Inventory } = require("./inventory");
 
-
-class Character{
-    constructor(type, AD, HP, gold){     
-        this.gold = 0;
+export class Character{
+    constructor(name, type, AD, currentHP, totalHP, XP=0, gold=0){     
+        this.gold = this.gold;
+        this.XP = this.XP;
+        this.name = name;
+        if (this.name === '') {
+          this.name = 'Character';
+        }
     }
-    // get HP() {
-    //     return this.HP;
-    // }
-    // get gold() {
-    //     return this.gold;
-    // }
 }
 
 class Mage extends Character{
-    constructor(type, AD, HP, gold) {
-        super(type, AD, HP, gold);
+    constructor(name, type, AD, currentHP, totalHP, XP, gold) {
+        super(name, type, AD, currentHP, totalHP, XP, gold);
         this.type = "Mage";
         this.AD = 40;
-        this.HP = 100;
+        this.currentHP = 100;
+        this.totalHP = 100;
     }
-    // get AD() {
-    //     return this.AD;
-    // }
-    
 }
 
 class Warrior extends Character{
-    constructor(type, AD, HP, gold) {
-        super(type, AD, HP, gold);
+    constructor(name, type, AD, currentHP, totalHP, XP, gold) {
+        super(name, type, AD, currentHP, totalHP, XP, gold);
         this.type = "Warrior";
         this.AD = 20;
-        this.HP = 200;
+        this.currentHP = 200;
+        this.totalHP = 200;
         // this.gold = gold;
     }
 }
@@ -41,58 +38,102 @@ class Warrior extends Character{
 
 
 class Thief extends Character{
-    constructor(type, AD, HP, gold) {
-        super(type, AD, HP, gold);
+    constructor(name, type, AD, currentHP, totalHP, XP, gold) {
+        super(name, type, AD, currentHP, totalHP, XP, gold);
         this.type = "Thief";
         this.AD = 30;
-        this.HP = 150;
+        this.currentHP = 150;
+        this.totalHP = 150;
     }
 }
+
+function attackEnemy(){
+    //
+}
+function flee(){
+    //
+}
+
+function calculateLevel(XP){
+    let level = 0;
+    if(XP<=18){
+        level = 1;
+    }
+    if(XP>18 && XP<=54){
+        level = 2;
+    }
+    if(XP>54 && XP<=108){
+        level = 3;
+    }
+    if(XP>108 && XP<=180){
+        level = 4;
+    }
+    if(XP>180 && XP<=270){
+        level = 5;
+    }
+    if(XP>270 && XP<=378){
+        level = 6;
+    }
+    if(XP>378 && XP<=504){
+        level = 7;
+    }
+    if(XP>504 && XP<=648){
+        level = 8;
+    }
+    if(XP>648 && XP<=810){
+        level = 9;
+    }
+    if(XP>810){
+        level = 10;
+    }
+        
+return level;
+
+}
+
+
+function calculateTotalHP(totalHP, characterLevel){
+    HP = HP + level*2.9;
+    return Math.floor(HP);
+    // 102.7
+    // 108.10000000000001
+    // 116.20000000000002
+    // 127.00000000000001
+    // 140.5
+    // 156.7
+    // 175.6
+    // 197.2
+    // 221.5
+    // 248.5
+}
+
+
+
+
+function calculateAD(attack, characterLevel){
+    attack = attack + level*1.2;
+    return Math.floor(attack);
+    // 41.2
+    // 43.6
+    // 47.2
+    // 52
+    // 58
+    // 65.2
+    // 73.60000000000001
+    // 83.2
+    // 94
+    // 106
+    }
+
+
 
 
 module.exports = {
     Mage,
     Warrior,
     Thief,
+    calculateTotalHP, 
+    calculateLevel, 
+    calculateAD
 };
 
-// import Inventory from './inventory';
-
-// export default class Character {
-
-//   constructor(name = '', inventory = new Inventory(), currentLocation = '', startLocation) {
-//     this.name = name;
-//     if (this.name === '') {
-//       this.name = 'Character';
-//     }
-//     this.inventory = inventory;
-//     if (this.currentlocation=== '') {
-//       this.currentlocation = this.startlocation;
-//     }
-//     this.startlocation = startlocation;
-//   }
-//   enterlocation(location) {
-//     const locationResult = location.enter(this.inventory.items);
-
-//     if (roomResult[1] === false) {
-//       // Player did not have required items to enter the room
-//     } else {
-//       // Entered room successfully
-//       this.locationRoom = location.name;
-//     }
-//     // Return results text and whether or not player successfully entered room
-//     return [locationResult[0], locationResult[1]];
-//   }
-
-//   getItem(item) {
-//     this.inventory.addItem(item);
-//     return this.inventory;
-//   }
-
-//   dropItem(item) {
-//     this.inventory.dropItem(item);
-//     return this.inventory;
-//   }
-// }
-
-// module.exports = { Class };

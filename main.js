@@ -1,27 +1,49 @@
+// Essential:
+// 1) Create the "battle" logic (HP tracking, X attacks Y and Y attacks X) //Lizzie and Ani
+//XP to levels calculation (level * 100 * 1.6)
+// 2) Make logic for choosing weak, medium or strong enemies based on character level // Lizzie and Ani
+// 3) Write the game progress in a JSON file so that it can be retrieved //Bianca
+// 4) Modify player class, create instance and adjust it based on user input from main.js //Kras
+
+
+// -) If we have time, write logic for when items are dropped by enemies and define a few item options. if we want to keep it simple we can maybe just make enemies drop potions and gold.
+// -) If we still have time, we can implement "special abilities" and "mana" for characters
+
+
 //You can always enter "quit" to exit the game
 //Game should be saved after each move/interaction, or at least at key points.
 'use strict';
 const prompt = require('prompt-sync')();
-const { Mage, Thief, Warrior } = require("./character");
-let character = ""
-let activity = ""
+const { Mage, Thief, Warrior, calculateAD, calculateTotalHP, calculateLevel } = require("./character");
+//const { Enemy, receiveAttack } = require('./enemy');
+const { consumePotion } = require('./battle')
+let character = "";
+let activity = "";
+let name = "";
+let xp = 0;
+// let player = ""
+//checkJSON();
+
 
 console.log("Welcome to Dungeon Fortress.\n")
+startNewGame();
+selectCharacterClass();
+// setTimeout(selectCharacterClass, 2300);
+console.log("In order to acquire gold, you need to kill creatures that you encounter along your way...");
+console.log("...Use your gold to replenish your health and avoid dying as creatures get stronger.");
+console.log("Let's begin your journey. You will learn the rest along the way.");
+chooseActivity();
 
-//***CHECK IF PLAYER ALREADY HAS AN EXISTING GAME SAVED***
-function checkGameStatus(){
-    //if (log.json == true){
-        //options: [Continue last game] [Start a new game] [Exit]
-    // }
-    // else{
-    //    options: [Start a new game][Exit]
-    // }
-}
 
 function startNewGame(){
-    const name = prompt('Enter your character name? ');
+    name = prompt('Enter your character name? ');
+    // player.name = name;
+    displayName();
+    readStory();
+
     function displayName(){
-        console.log(`Welcome ${name}...`);
+        // console.log(`Welcome ${name}...`);
+        console.log("Welcome " + name + " ...");
     }
     // setTimeout(displayName, 400);
 
@@ -36,15 +58,15 @@ function selectCharacterClass(){
     
     //cheap solution but hey, works for now :D -- should ideally search through the classes in character.js
     if(characterClass.toLowerCase() === "mage"){
-        character = new Mage();
+        character = new Mage(name);
 
     }
     else if(characterClass.toLowerCase() === "warrior"){
-        character = new Warrior();
+        character = new Warrior(name);
 
     }
     else if(characterClass.toLowerCase() === "thief"){
-        character = new Thief();
+        character = new Thief(name);
     }
     else{
         console.log("Invalid class: " + characterClass + " doesn't exist or is spellt incorrectly.")
@@ -52,30 +74,25 @@ function selectCharacterClass(){
     }
 
     console.log("Great choice! The " + character.type + " is famous for it's strength in the kingdom!");
-    console.log("Your starting attributes are: \n[AD: " + character.AD + "], \n[HP: " + character.HP + "], \n[Gold: "+ character.gold + "]");
+    console.log("Your starting attributes are: \n[Character name: " + character.name + "] \n[Character class: " + character.type + "] \n[Attack Damage (AD): " + character.AD + "] \n[Health Points (HP): " + character.HP + "] \n[Experience Points (XP): " + character.XP + "] \n[Gold: "+ character.gold + "]");
 }
 
-
-
-console.log("In order to acquire gold, you need to kill creatures that you encounter along your way...");
-
-console.log("...Use your gold to replenish your health and avoid dying as creatures get stronger.");
-
-console.log("Let's begin your journey. You will learn the rest along the way.");
+//calling function
+//receiveAttack(character.HP);
 
 
 function chooseActivity(){
-    console.log("What would you like to do next?")
-    console.log("w - continue walking");
+    console.log("What would you like to do now?")
+    console.log("c - continue"); //80% chance of enemy, (15% chance of helper), 5% chance of nothing
     console.log("i - view inventory");
-    console.log("s - check status (AD, HP, XP, level)");
-    console.log("r - consume a potion to recover HP")
+    console.log("s - check status (AD, HP, XP, level)"); //Attack Damage (AD): 20 
+    console.log("r - consume a potion to recover HP (20G for 20HP)") 
     console.log("q - quit the game")
     activity = prompt();
 
     if (activity === "w"){
         console.log("You've encountered an enemy"); //could also encounter (2) nothing or (3) encounter a merchant/helper
-        generateEnemy();
+        generateEnemy(); //generate enemy and print it's characteristics: Lizzie and Ani
         chooseFightAction();
     }
     else if(activity === "i"){
@@ -84,11 +101,11 @@ function chooseActivity(){
     else if(activity === "s"){
         checkCharacterStatus();
     }
-    else if(activity === "r"){
-        recoverHP();
+    else if(activity === "p"){
+        //consumePotion(); //Kras - battle.js
     }
     else if(activity === "q"){
-        quitGame();
+        quitGame(); //Bianca
     }
     else{
         console.log("The command " + activity + " is incorrect. Please use only letters without spaces or special characters");
@@ -96,17 +113,33 @@ function chooseActivity(){
     }
 }
 
+function checkCharacterStatus(){
+    //check status (AD, HP, XP, level)"); //Attack Damage (AD): 20 
+    console.log("Your statistics are: ")
+    console.log("Attack Damage (AD): :" + character.AD);
+    console.log("Health Points (HP): " + character.HP);
+    console.log("Experience Points (XP): " + character.XP);
+    console.log("Level: " + calculateLevel(character.XP)); //can be calculated based on total experience.
+    chooseActivity();
+}
+
 
 function chooseFightAction(){
     console.log("What would you like to do next?")
     console.log("a - attack");
     console.log("f - flee battle");
+    console.log("p - consume potion (20G for 20HP)");
     action  = prompt();
     if(action === "a"){
-        attack();
+        attack(); //Ani, Lizzie
     }
     else if(action==="f"){
-        flee();
+        console.log("You've fled the fight")
+        chooseActivity(); //done
+
+    }
+    else if(action==="p"){
+        consumePotion(character.currentHP, gold); //Kras
     }
     else{
         "incorrect command";
@@ -155,18 +188,13 @@ function chooseFightAction(){
 //  }
 
 function quitGame(){
-    choice = prompt("Are you sure you want to quit the game (your progress will be saved)? (Y/N): ")
+    let choice = prompt("Are you sure you want to quit the game (your progress will be saved)? (Y/N): ")
     if(choice==="Y"){
         //save progress in JSON file
+        console.log("game has exited")
         process.exit();
     }
     else{
-        continue; //might have to make it "chooseActivity()"
+        // continue; //might have to make it "chooseActivity()"
     }
 }
-
-
-startNewGame();
-selectCharacterClass();
-// setTimeout(selectCharacterClass, 2300);
-chooseActivity();
