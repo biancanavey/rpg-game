@@ -1,40 +1,38 @@
-'use strict';
-const fs = require('fs');
+const fs = require("fs");
 
-// Attempt to read the state file, and parse it into an object
-// to return to caller.
 const read = () => {
-    fs.readFile('save.json', (err, data) => {
-        if (err) {
-            throw err;
-        } 
-        const saveData = JSON.parse(data);
-        console.log(saveData);
-    });
+  fs.readFile("save.json", "utf8", (err, data) => {
+    if (err) {
+      return console.error(err);
+    }
+    console.log(data);
+  });
 };
 
-const write = (dataToBeSaved) => {
-    const content = JSON.stringify(dataToBeSaved, null, 2);
-    fs.writeFile('save.json', content, { flag: 'a' }, (err) => {
-        if (err) throw err;
-        console.log("Data written to save.json");
-    });
+const write = (jsonData) => {
+  const dataString = JSON.stringify(jsonData, null, 2);
+  fs.writeFile("save.json", dataString, { flag: "a" }, (err, data) => {
+    if (err) {
+      return console.error(err);
+    }
+    console.log(data);
+  });
 };
 
 const del = () => {
-    fs.unlink("save.json", (err => {
-        if (err) console.log(err);
-        else {
-          console.log("\nDeleted file: save.json");       
-        }
-      }));    
-}
+  fs.unlink("save.json", (err) => {
+    if (err) throw err;
+    console.log("\nDeleted file: save.json");
+  });
+};
 
 module.exports = {
     read,
     write,
     del
 }
+
+
 // module.exports = {
 //     Character,
 //     Mage,
@@ -45,10 +43,6 @@ module.exports = {
 //     calculateAD
 // };
 
-// const obj = {
-//     name: "Bianca",
-//     age: "baby",
-// }
 
 // const read = async () => {
 //     try {
@@ -111,9 +105,6 @@ module.exports = {
 
 //Delete method
 // const del = callback => fs.unlink("save.json", callback);
-
-
-
 
 // promisify the exports
 // const util = require('util');
